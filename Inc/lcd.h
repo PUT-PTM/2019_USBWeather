@@ -1,8 +1,5 @@
 #include "stm32f1xx_hal.h"
 
-
-
-
 #define LCD_E_HIGH 		HAL_GPIO_WritePin(LCD_E_PORT, LCD_E_PIN, 1)
 #define LCD_E_LOW 		HAL_GPIO_WritePin(LCD_E_PORT, LCD_E_PIN, 0)
 #define LCD_RS_LOW 		HAL_GPIO_WritePin(LCD_RS_PORT, LCD_RS_PIN, 0)

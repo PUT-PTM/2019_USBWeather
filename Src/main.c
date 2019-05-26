@@ -20,10 +20,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "lcd.h"
 #include "usb_device.h"
-#include "usbd_cdc_if.h"
-
+#include "BMP280/bmp280.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -36,7 +34,14 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+BMP280_HandleTypedef bmp280;
 
+float pressure = 2.1f;
+float temperature = 2.5f;
+float humidity = 2.4f;
+
+uint16_t size;
+uint8_t Data[256];
   /* USER CODE END 6 */
 
 /* USER CODE END PD */
@@ -47,6 +52,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+I2C_HandleTypeDef hi2c1;
 
 /* USER CODE BEGIN PV */
 
@@ -55,6 +61,7 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_I2C1_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -92,20 +99,60 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_USB_DEVICE_Init();
+  MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
 
 LCD_Init();
 MX_USB_DEVICE_Init();
 //HAL_Delay2(500);
 lcd_str_XY(1,0,"TEST :)");
-/* USER CODE END 2 */
+
+bmp280_init_default_params(&bmp280.params);
+	bmp280.addr = BMP280_I2C_ADDRESS_0;
+	bmp280.i2c = &hi2c1;
+
+	while (!bmp280_init(&bmp280, &bmp280.params)) {
+		size = sprintf((char *)Data, "BMP280 initialization failed\n");
+		lcd_str_XY(1,0, Data);
+		HAL_Delay2(2000);
+	}
+	bool bme280p = bmp280.id == BME280_CHIP_ID;
+		size = sprintf((char *)Data, "found %s !", bme280p ? "BME280" : "BMP280");
+		lcd_str_XY(1,0,Data);
+
+	HAL_Delay2(1000);
+
+
+  /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
+	  HAL_Delay2(100);
+	  		while (!bmp280_read_float(&bmp280, &temperature, &pressure, &humidity)) {
+	  			size = sprintf((char *)Data,
+	  					"Temperature/pressure reading failed!");
+	  			lcd_str_XY(1,0,Data);
+	  			HAL_Delay(2000);
+	  		}
 
+	  		size = sprintf((char *)Data,"P: %d Pa             ",
+	  				(int)pressure);
+
+	  		lcd_str_XY(0,0,Data);
+	  		if (bme280p) {
+	  		size = sprintf((char *)Data,", H: %d %% T: %d C           ", (int)humidity, (int)temperature);
+	  			lcd_str_XY(0,1,Data);
+	  		}
+
+	  		else {
+	  			size = sprintf((char *)Data, "");
+	  			lcd_str_XY(1,0, Data);
+	  		}
+	  		HAL_Delay2(2000);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -156,6 +203,40 @@ void SystemClock_Config(void)
 }
 
 /**
+  * @brief I2C1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C1_Init(void)
+{
+
+  /* USER CODE BEGIN I2C1_Init 0 */
+
+  /* USER CODE END I2C1_Init 0 */
+
+  /* USER CODE BEGIN I2C1_Init 1 */
+
+  /* USER CODE END I2C1_Init 1 */
+  hi2c1.Instance = I2C1;
+  hi2c1.Init.ClockSpeed = 100000;
+  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c1.Init.OwnAddress1 = 0;
+  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C1_Init 2 */
+
+  /* USER CODE END I2C1_Init 2 */
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -167,14 +248,14 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LED_PORT, LED_PIN, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, LCD_E_PIN|LCD_RS_PIN|LCD_D4_PIN|LCD_D5_PIN
+  HAL_GPIO_WritePin(GPIOA, LED_E_PIN|LED_RS_PIN|LCD_D4_PIN|LCD_D5_PIN
                           |LCD_D6_PIN|LCD_D7_PIN, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : LED_PIN */
@@ -184,14 +265,14 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LED_PORT, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LCD_E_PIN LCD_RS_PIN LCD_D4_PIN LCD_D5_PIN
+  /*Configure GPIO pins : LED_E_PIN LED_RS_PIN LCD_D4_PIN LCD_D5_PIN
                            LCD_D6_PIN LCD_D7_PIN */
-  GPIO_InitStruct.Pin = LCD_E_PIN|LCD_RS_PIN|LCD_D4_PIN|LCD_D5_PIN
+  GPIO_InitStruct.Pin = LED_E_PIN|LED_RS_PIN|LCD_D4_PIN|LCD_D5_PIN
                           |LCD_D6_PIN|LCD_D7_PIN;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 }
 

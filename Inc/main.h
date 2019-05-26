@@ -32,7 +32,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#define LED_PIN GPIO_PIN_13
+/*#define LED_PIN GPIO_PIN_13
 #define LED_PORT GPIOC
 #define LCD_E_PIN GPIO_PIN_12
 #define LCD_E_PORT GPIOB
@@ -46,6 +46,128 @@ extern "C" {
 #define LCD_D6_PORT GPIOB
 #define LCD_D7_PIN GPIO_PIN_8
 #define LCD_D7_PORT GPIOB
+*/
+/* USER CODE BEGIN Private defines */
+/* USER CODE END Includes */
+
+/* Exported types ------------------------------------------------------------*/
+/* USER CODE BEGIN ET */
+
+/* USER CODE END ET */
+
+/* Exported constants --------------------------------------------------------*/
+/* USER CODE BEGIN EC */
+
+/* USER CODE END EC */
+
+/* Exported macro ------------------------------------------------------------*/
+/* USER CODE BEGIN EM */
+
+/* USER CODE END EM */
+
+/* Exported functions prototypes ---------------------------------------------*/
+void Error_Handler(void);
+
+/* USER CODE BEGIN EFP */
+
+/* USER CODE END EFP */
+
+/* Private defines -----------------------------------------------------------*/
+#define LED_PIN GPIO_PIN_13
+#define LED_PORT GPIOC
+#define LCD_E_PIN GPIO_PIN_2
+#define LCD_E_PORT GPIOA
+#define LCD_RS_PIN GPIO_PIN_3
+#define LCD_RS_PORT GPIOA
+#define LCD_D4_PIN GPIO_PIN_4
+#define LCD_D4_PORT GPIOA
+#define LCD_D5_PIN GPIO_PIN_5
+#define LCD_D5_PORT GPIOA
+#define LCD_D6_PIN GPIO_PIN_6
+#define LCD_D6_PORT GPIOA
+#define LCD_D7_PIN GPIO_PIN_7
+#define LCD_D7_PORT GPIOA
+/* USER CODE BEGIN Private defines */
+/* USER CODE END Includes */
+
+/* Exported types ------------------------------------------------------------*/
+/* USER CODE BEGIN ET */
+
+/* USER CODE END ET */
+
+/* Exported constants --------------------------------------------------------*/
+/* USER CODE BEGIN EC */
+
+/* USER CODE END EC */
+
+/* Exported macro ------------------------------------------------------------*/
+/* USER CODE BEGIN EM */
+
+/* USER CODE END EM */
+
+/* Exported functions prototypes ---------------------------------------------*/
+void Error_Handler(void);
+
+/* USER CODE BEGIN EFP */
+
+/* USER CODE END EFP */
+
+/* Private defines -----------------------------------------------------------*/
+/*#define LED_Pin GPIO_PIN_13
+#define LED_Port GPIOC
+#define LED_E_Pin GPIO_PIN_2
+#define LED_E_Port GPIOA
+#define LED_RS_Pin GPIO_PIN_3
+#define LED_RS_Port GPIOA
+#define LCD_D4_Pin GPIO_PIN_4
+#define LCD_D4_Port GPIOA
+#define LCD_D5_Pin GPIO_PIN_5
+#define LCD_D5_Port GPIOA
+#define LCD_D6_Pin GPIO_PIN_6
+#define LCD_D6_Port GPIOA
+#define LCD_D7_Pin GPIO_PIN_7
+#define LCD_D7_Port GPIOA
+*/
+/* USER CODE BEGIN Private defines */
+/* USER CODE END Includes */
+
+/* Exported types ------------------------------------------------------------*/
+/* USER CODE BEGIN ET */
+
+/* USER CODE END ET */
+
+/* Exported constants --------------------------------------------------------*/
+/* USER CODE BEGIN EC */
+
+/* USER CODE END EC */
+
+/* Exported macro ------------------------------------------------------------*/
+/* USER CODE BEGIN EM */
+
+/* USER CODE END EM */
+
+/* Exported functions prototypes ---------------------------------------------*/
+void Error_Handler(void);
+
+/* USER CODE BEGIN EFP */
+
+/* USER CODE END EFP */
+
+/* Private defines -----------------------------------------------------------*/
+#define LED_PIN GPIO_PIN_13
+#define LED_Port GPIOC
+#define LED_E_PIN GPIO_PIN_2
+#define LED_E_Port GPIOA
+#define LED_RS_PIN GPIO_PIN_3
+#define LED_RS_Port GPIOA
+#define LCD_D4_PIN GPIO_PIN_4
+#define LCD_D4_Port GPIOA
+#define LCD_D5_PIN GPIO_PIN_5
+#define LCD_D5_Port GPIOA
+#define LCD_D6_PIN GPIO_PIN_6
+#define LCD_D6_Port GPIOA
+#define LCD_D7_PIN GPIO_PIN_7
+#define LCD_D7_Port GPIOA
 /* USER CODE BEGIN Private defines */
 /* USER CODE END Includes */
 
